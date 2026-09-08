@@ -11,7 +11,7 @@
     "build:zip": "node build.js",
     "preview": "vite preview",
     "deploy": "npm run vup && git add . && git commit -m \"Deploy v$npm_package_version - $(date +'%Y-%m-%d')\" && git push",
-    "page": "git add -f tools && git commit -m \"New build\" && git push && git subtree push --prefix=tools origin gh-pages",
+    "page": "git add -f demo && git commit -m \"Demo Test\" && git push && git subtree push --prefix=demo origin gh-pages",
     "vup": "npm version patch",
     "vun": "npm version minor",
     "vum": "npm version major"
