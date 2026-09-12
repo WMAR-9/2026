@@ -8,7 +8,7 @@
 
 ### Gameplay Preview
 
-[![UnicorpsePreview](./img/gameplay.gif)](./img/gameplay.gif)
+[![UnicorpsePreview](./img/2026.gif)](./img/2026.gif)
 
 | ![](./img/Designer_800X500.png) | ![](./img/Designer_320X320.png) |
 | :-: | :-: |
@@ -57,7 +57,6 @@
 ---
 
 ## 🕹️ Controls
-
 ### Desktop Keyboard
 | Key | Action | Description |
 | :--- | :--- | :--- |
