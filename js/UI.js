@@ -66,9 +66,7 @@ export let
         isActive && SR(bx, by, 12, 12, '#fff');
       }
     }
-    // =========================================================================
-// 結算畫面渲染 (JS13KB 極限化簡版：單一管線 + 純 3 碼 HEX)
-// =========================================================================
+  
   if (gameState.isGameOver || gameState.gameComplete) {
       let L = gameState.isGameOver,
           q = gameState.levelData?.characterQueue || [],
@@ -83,7 +81,7 @@ export let
       drawBitmapText3D(L ? "GAME OVER" : "VICTORY!", 400, 100, 3, L ? '#f43' : '#fc1', '#000', 'center', 4);
       drawBitmapText3D(L ? "ALL PLAYER SACRIFICED" : "RAINBOW GLADE", 400, 140, 1, L ? '#fca' : '#8fa', '#000', 'center', 2);
 
-      FR(200, 170, 400, 140, '#0008'); // 替換 rgba，省下 10 Bytes
+      FR(200, 170, 400, 140, '#0008');
       SR(200, 170, 400, 140,L ? '#711' : '#142',1);
       drawBitmapText3D(L ? "--- SETTLEMENT SUMMARY ---" : "--- MISSION COMPLETE ---", 400, 185, 1, '#ffa', '#000', 'center', 2);
 

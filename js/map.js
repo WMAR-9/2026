@@ -1454,7 +1454,7 @@ export const LEVEL_DEFS = [
         gameState.timer = 5.0;
         gameState.bodies = []
         gameState.bs = []
-        // 0 Up 1 Down
+        
         InitUpside()
         
         gameState.spikes = (def.spikes || []).map(([x, y, w, h, dir, theme]) => ({ x, y, w, h, dir, theme }));
@@ -1468,16 +1468,16 @@ export const LEVEL_DEFS = [
             ...M(def.switches, ([x, y, w, h, mode = 0, label = 'SW', targetIdx = 0, type = 0]) => ({
                 x, y, w, h, mode, label, targetIdx, type, isPressed: 0, k: 1
             })),
-            // 鏡面：lightActive 與 lightTimer 預設為 0，未衝撞前絕不主動發光
+            
             ...M(def.mirrors, ([x, y, w, h, type = 1, angle = 0, railMinX = x - 100, railMaxX = x + 100]) => ({
                 x, y, w, h, type, angle, railMinX, railMaxX, railY: y, vy: 0, grounded: +(type == 3),
                 lightActive: 0, lightTimer: 0, lightDir: 1, lightColor: '#ff0', colorId: 0, k: 2
             })),
-            // 怪物：完整初始化所有計時器與狀態，確保 AI 正常巡邏走動
+            
            ...M(def.monsters, ([x, y, type = 1, color = 0, minX = 0, maxX = 800,
                 scale = type == 2 ? 3 : type == 4 ? 4 : type == 3 ? 1.5 : 1.5]) => ({
                 x, y, type, 
-                color: color , // 保證永遠是純數字 (0~6)
+                color: color , 
                 minX, maxX, scale,
                 w: (type == 2 ? 15 : type == 3 ? 23 : 29) * scale,
                 h: (type == 2 ? 13 : type == 3 ? 31 : 29) * scale,

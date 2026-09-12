@@ -214,7 +214,7 @@ export let
     }
 
     let type = body.charType ?? 0;
-    // 直接以數字 type 索引起碼
+    
     let pal = CHARACTER_PALETTES[type] || PALETTE;
     let frame = body.isPinned ? 5 : 6;
 
@@ -229,9 +229,9 @@ export let
     drawSprite(hors, frame, body.x, body.y, 2, body.facing<0, pal);
   };
   
-// =========================================================================
-// 1. 開關渲染 (drawSwitch) - 移除多餘的 ctx 引數，嚴格 3 碼 HEX
-// =========================================================================
+
+
+
 export const drawSwitch = (
   sw,
   o = sw.isPressed ? 5 : 0,
@@ -239,13 +239,13 @@ export const drawSwitch = (
   y = sw.y + o,
   w = sw.w,
   h = sw.h - o,
-  T = sw.type, // 0: 魂/出口, 1: 光
-  M = sw.mode  // 0: 出口/普通, 1: 魂犧牲
+  T = sw.type, 
+  M = sw.mode  
 ) => (
-  // 1. 底色：按下為綠(#2c5)；未按下依序對齊光(#ea0)、魂(#a5f)、出口(#d22)
+  
   FR(x, y, w, h, sw.isPressed ? '#2c5' : (T ? '#ea0' : (M ? '#a5f' : '#d22'))),
   SR(x, y, w, h, '#fff'),
-  // 2. 文字：按下為亮綠(#8fa)；未按下對齊門的文字色
+  
   drawBitmapText3D(
     sw.label || (T ? 'LIGHT' : (M ? 'SOUL' : 'EXIT')),
     x + w / 2,
@@ -258,14 +258,14 @@ export const drawSwitch = (
   )
 );
 
-// =========================================================================
-// 2. 閘門渲染 (drawGate) - 極限精簡版 (確保顏色與開關完全一致)
-// =========================================================================
+
+
+
 export const drawGate = (
   gate,
   isUpsideDown = isUpside,
   cx = gate.x + gate.w / 2,
-  isL = gate.gt, // 0: SOUL, 1: LIGHT
+  isL = gate.gt, 
   [fill, stroke, col, txt] = gate.isExit
     ? ['#d22', '#fca', '#fed', 'EXIT']
     : isL ? ['#ea0', '#ffa', '#ffa', 'LIGHT']
@@ -285,12 +285,12 @@ export const drawGate = (
       SR(gate.x, gate.y, gate.w, gate.h, stroke),
       drawBitmapText3D(txt, cx, gate.y - 14, 1, col, '#000', 'center', 2)
     ),
-    T() // 複用 canvas.js 的 T() 取代 ctx.restore()，再省數個位元組
+    T() 
   )
 );
-// =========================================================================
-// 3. 鏡面渲染 (drawMirror) - 移除多餘的 ctx 引數
-// =========================================================================
+
+
+
 export const drawMirror = (
   m,
   cx = m.x + m.w / 2,
@@ -349,7 +349,7 @@ export const drawMonster = (
     ? ((tick / (T === 4 ? 8 : 10)) | 0) % walk_monster.length
     : (T === 2 ? (mon.shootTimer < 20 ? 1 : (tick / 12 & 1 ? 2 : 0)) : (!mon.grounded | 0)),
   
-  // 取得當前怪物數字號碼對應的主色與暗色
+  
   colHex = CHARACTER_PALETTES[mon.color || 0]?.[2] || '#f43',
   darkHex = CHARACTER_PALETTES[mon.color || 0]?.[3] || '#501',
   

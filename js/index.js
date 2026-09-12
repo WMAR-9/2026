@@ -45,15 +45,15 @@ let updateGame=_=>{
     
     ents.forEach(e => e.k == 2 && updateMirrorPhysics(e, plats, ents));
     ents.forEach(e => e.k == 3 && updateMonsterPhysics(e, plats, gates, ents, p, bodies, isUpside));
-    updateProjectiles(plats, ents, p, bodies); // 推進與碰撞彈幕
+    updateProjectiles(plats, ents, p, bodies); 
     
     gameState.laserSegments = calculateLaserSegments();
 
-    // 4. 附著遺體連鎖檢測與下墜物理
+    
     updatePinnedBodiesState(bodies, plats, spikes);
     bodies.forEach(b => updateBody(b, plats, ents, bodies, isUpside));
 
-    // 5. 開關狀態計算 (k: 1) 與閘門狀態同步 (純索引 targetIdx 對齊)
+    
     ents.forEach(e => e.k == 1 && (
         updateSwitchState(e, p, bodies, isUpside),
         gates[e.targetIdx] && (gates[e.targetIdx].isOpen = e.isPressed)
@@ -80,7 +80,7 @@ renderGame=_=>{
         drawPixelSpikes(spike.x, spike.y, spike.w, spike.h, spike.dir, spike.theme)
     );
 
-    // 3. 雷射光束線段 (提升 lineWidth，消滅重複的 save/restore)
+    
     ctx.lineWidth = 4;
     (gameState.laserSegments || []).forEach(seg => {
         ctx.strokeStyle = seg.color;
@@ -90,26 +90,26 @@ renderGame=_=>{
         K()
     });
 
-    // 在 renderGame() 內部：
-    // 依據實體的 k 代碼 (0: gate, 1: switch, 2: mirror, 3: monster) 直接查表繪製
+    
+    
     const ENTITY_PAINTERS = [drawGate, drawSwitch, drawMirror,drawMonster];
 
-    // 單一行遍歷所有實體 (gates 已包含在 entities 陣列中，切勿再另外 forEach gates)
+    
     gameState.entities.forEach(e => ENTITY_PAINTERS[e.k]?.(e));
 
-    // 遺體繪製 (維持極簡單行)
+    
     gameState.bodies.forEach(b => drawBody(b, isUpside));
     
-    //   // 彈幕投射物
+    
     drawProjectiles()
 
-    // 6. 關卡終點出口 (全域 FR + 3 碼 Hex)
+    
     const ex = gameState.levelData.exit;
     !isUpside && ex && (
         FR(ex.x, ex.y, ex.w, ex.h, '#b5f'),
         drawBitmapText3D("EXIT", ex.x + ex.w / 2, ex.y - 14, 1, '#fc1', '#741', 'center', 2)
     );
-    // 7. 玩家實體 (存活時繪製)
+    
     let b = gameState.entities.find(e => e.type == 4),
     t = b || ex;
 
@@ -120,13 +120,13 @@ renderGame=_=>{
             p.x - 4, p.y - 50, 2, "#fff8"
         )
     );
-    // 8. Boss 射線 (使用解構 cos/sin，簡化線段繪製)
+    
     if (gameState.bs) {
         let [bx, by, len] = gameState.bs;
-        gameState.bs[2] += 20; // 射線半徑每幀向外擴散 20px
+        gameState.bs[2] += 20; 
         ctx.lineWidth = 4;
         for (let i = 42; i--;) {
-            ctx.strokeStyle = CHARACTER_PALETTES[i % 7][2]; // 7色循環取色
+            ctx.strokeStyle = CHARACTER_PALETTES[i % 7][2]; 
             B()
             MT(bx, by);
             LT(bx + cos(i * PI / 21) * len, by + sin(i * PI / 21) * len);

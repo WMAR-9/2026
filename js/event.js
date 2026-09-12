@@ -16,7 +16,7 @@ const ACTIONS = [
     )
 ];
 
-// 【新增】：多指觸控座標暫存池 (以手指 ID 為鍵)
+
 let ptrs = {};
 
 export let bindEvents = () => {
@@ -38,7 +38,7 @@ export let bindEvents = () => {
 
     onkeydown = onkeyup = e => handleKey(e, e.type[5]);
 
-    // 多指支援之指標核心
+    
     const handlePointer = (e, isDown) => {
         getAudioContext();
         if (startState < 3) return isDown && handleStartInput();
@@ -48,7 +48,7 @@ export let bindEvents = () => {
             sx = cvs.width / rect.width,
             sy = cvs.height / rect.height;
 
-        // 1. 維護當前螢幕上的多根手指座標
+        
         if (e) {
             isDown 
                 ? (ptrs[e.pointerId] = [(e.clientX - rect.left) * sx, (e.clientY - rect.top) * sy])
@@ -59,7 +59,7 @@ export let bindEvents = () => {
 
         let pts = Object.values(ptrs);
 
-        // 2. 頂部 UI 與結算按鈕判定 (以當前觸發事件的手指為準)
+        
         if (e && isDown) {
             let [x, y] = ptrs[e.pointerId] || [];
             if (y <= 38) {
@@ -73,7 +73,7 @@ export let bindEvents = () => {
             }
         }
 
-        // 3. 虛擬按鈕多指並行檢測：檢查是否有任一根手指落在按鈕範圍內
+        
         if (!hideUI && CONTROLLER_BUTTONS) {
             CONTROLLER_BUTTONS.forEach(([bx, by, bw, bh], i) => {
                 let active = pts.some(([px, py]) => px >= bx && px <= bx + bw && py >= by && py <= by + bh);
@@ -93,5 +93,5 @@ export let bindEvents = () => {
 
     cvs.onpointerdown = e => (e.preventDefault(), handlePointer(e, 1));
     onpointermove = e => handlePointer(e, e.buttons);
-    onpointerup = onpointercancel = e => handlePointer(e, 0); // 傳入 e，僅釋放對應的 pointerId
+    onpointerup = onpointercancel = e => handlePointer(e, 0); 
 };

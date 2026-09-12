@@ -60,8 +60,8 @@ export let
             ? (gameState.isGameOver = 1, playSound(1))
             : resetPlayer(gameState.player, d.spawn.x ?? d.spawn[0], d.spawn.y ?? d.spawn[1], getCurrentCharacter()),
 
-    // 雙界活性判定：表世界魂體(0)在表世界不阻擋；裏世界屍體(1)在表世界為雲朵踏板
-    // isBodyActiveInDimension = (b, isUp = isUpside) => Boolean(isUp || b.originDimension === 1),
+    
+    
 
     createSacrificeBody = (x, isPinned = 0, facing, dim = isUpside, g = gameState, p = g.player) => (
         g.bodies.push({
@@ -79,7 +79,7 @@ export let
         advanceToNextCharacter()
     ),
 
-    // 碎片系統：純數字號碼記錄 (0~6)
+    
     spawnFractureParticles = (x, y, colorId = 0) => {
         for (let i = 12; i--;)
             gameState.bloodParticles.push({
@@ -112,7 +112,7 @@ export let
             isUpside = 0
         ),
 
-    // 表世界自我犧牲：產生魂體 (dim = 0)
+    
     executePastelSacrifice = (g = gameState) =>
         !(isUpside || g.isGameOver) && (
             playSound(1),
@@ -162,7 +162,7 @@ export let
             body.y += body.vy = (body.vy || 0) + 0.45;
             bBox.y = body.y - hh;
             for (let p of obs) {
-                // 【修改處】：加入 by2 <= p.y + 4，刪除冗長的 Y 軸相交判斷
+                
                 if (body.vy > 0 && HIT(bBox, p, 0) && by2 <= p.y + 4) {
                     body.y = p.y - hh;
                     body.vy = 0;
@@ -195,7 +195,7 @@ export let
         return resetXY(clean(rx), clean(ry));
     },
 
-    // 射線段計算：雷射攜帶主角純數字號碼 (colorId: 0~6)
+    
     calculateLaserSegments = () => {
         let segments = [],
             mirrors = gameState.entities.filter(e => e.k == 2),
@@ -265,9 +265,9 @@ export let
         !was && sw.isPressed && playSound(3);
     };
 
-// =========================================================================
-// 1. 鏡面移動與雷射擊中怪物 (純數字命中規則，消滅任何字串比對)
-// =========================================================================
+
+
+
 export function updateMirrorPhysics(m, platforms, entities) {
     if (m.lightTimer > 0) {
         if (--m.lightTimer <= 0) m.lightActive = false;
@@ -282,11 +282,11 @@ export function updateMirrorPhysics(m, platforms, entities) {
             if (mon.type === 2 && !isUpside) continue;
 
             if (lineIntersectsBox(seg.x1, seg.y1, seg.x2, seg.y2, mon.x, mon.y, mon.w, mon.h)) {
-                // 【核心規則】：1/2 型任意命中；3/4 型必須雷射純數字 === 怪物純數字
+                
                 let canHit = mon.type <= 2 || seg.colorId === mon.color;
 
                 if (canHit) {
-                    if (mon.type === 4) { // Boss 首領怪
+                    if (mon.type === 4) { 
                         if (mon.hitCooldown <= 0 && !mon.isDefeated) {
                             mon.hitCooldown = 60;
                             playSound(4);
@@ -296,7 +296,7 @@ export function updateMirrorPhysics(m, platforms, entities) {
 
                             if (mon.remainingColors.length > 0) {
                                 mon.colorIndex = (mon.colorIndex || 0) % mon.remainingColors.length;
-                                mon.color = mon.remainingColors[mon.colorIndex]; // 轉為下一個純數字 (0~6)
+                                mon.color = mon.remainingColors[mon.colorIndex]; 
                             } else {
                                 
                                 mon.isDefeated = 1;
@@ -309,7 +309,7 @@ export function updateMirrorPhysics(m, platforms, entities) {
                                 break;
                             }
                         }
-                    } else { // 1 型巡邏、2 型射手、3 型跳躍怪
+                    } else { 
                         playSound(2);
                         spawnFractureParticles(mon.x + mon.w / 2, mon.y + mon.h / 2, mon.color);
                         mon.isDefeated = 1;
@@ -337,9 +337,9 @@ export function updateMirrorPhysics(m, platforms, entities) {
     }
 }
 
-// =========================================================================
-// 2. 怪物 AI、物理與巡邏更新 (純數字色彩管理)
-// =========================================================================
+
+
+
 export function updateMonsterPhysics(mon, platforms, gates, entities, player, bodies, isUp = isUpside) {
     if (mon.isDefeated) return;
 
@@ -395,25 +395,25 @@ export function updateMonsterPhysics(mon, platforms, gates, entities, player, bo
         }
     }
 
-    // =========================================================================
-    // 怪物攻擊與彈幕發射整合優化版 (JS13KB 程式碼減量)
-    // =========================================================================
+    
+    
+    
     let isAttacking = false;
     let distToPlayer = hypot(player.x - (mon.x + mon.w / 2), player.y - (mon.y + mon.h / 2));
 
-    // Type 2 (射手) 需在 280 範圍內；Type 4 (Boss) 則全場主動攻擊
+    
     if ((mon.type === 2 && distToPlayer <= 280) || mon.type === 4) {
         if (mon.type === 2) {
             isAttacking = true;
             mon.dir = player.x > mon.x ? 1 : -1;
         }
 
-        // 共用射擊冷卻計時器
+        
         if (--mon.shootTimer <= 0) {
             let pDir = player.x > mon.x ? 1 : -1;
             let cId = mon.colorId ?? mon.color ?? 0;
 
-            // 依據怪物種類動態配置子彈偏移量 (Type 2 發射 1 顆，Type 4 Boss 發射上下 2 顆)
+            
             let offsets = mon.type === 4 ? [4, mon.h - 22] : [mon.h / 2 - 5];
 
             offsets.forEach((oy, idx) => {
@@ -479,9 +479,9 @@ export function updateMonsterPhysics(mon, platforms, gates, entities, player, bo
     }
 }
 
-// =========================================================================
-// 3. 彈幕推進與碰撞
-// =========================================================================
+
+
+
 export function updateProjectiles(platforms = gameState.levelData?.platforms || [], entities = gameState.entities, player = gameState.player, bodies = gameState.bodies) {
     let projs = gameState.projectiles = gameState.projectiles || [],
         mirrors = entities.filter(e => e.k == 2);
@@ -539,9 +539,9 @@ export const drawProjectiles = () => {
     (gameState.projectiles || []).forEach(p => drawDiamondProjectile(p.x + p.w / 2, p.y + p.h / 2, p.angle || 0,p.color));
 };
 
-// =========================================================================
-// 4. 玩家移動與碰撞
-// =========================================================================
+
+
+
 export function checkPlayerCollisionX(p, platforms, gates, bodies, entities, isUp = isUpside) {
     let hw = p.w / 2,
         bp = { x: p.x - hw, y: p.y - p.h / 2 + 2, w: p.w, h: p.h - 4 },
@@ -666,4 +666,3 @@ export const updatePlayer = (p, keys, platforms, gates, bodies, entities) => {
     checkPlayerCollisionY(p, platforms, gates, bodies, entities);
 };
 
-// export { isBodyActiveInDimension };
